@@ -1,0 +1,7 @@
+{% load i18n %}
+
+<ul>Type: <a href="" data-value="all" data-filter="type__in" ng-click="single_choice_listener($event)">All</a> / <a href="">Storytellers</a> / <a href="" >Organizations</a></ul>
+<ul class="nav nav-tabs filter" id="sort">
+  <li><a data-value="title" data-filter="order_by" ng-click="single_choice_listener($event)"><i class="fa fa-sort-alpha-asc"></i> {% trans "Name A-Z" %}</a></li>
+  <li><a data-value="-title" data-filter="order_by" ng-click="single_choice_listener($event)"><i class="fa fa-sort-alpha-desc"></i> {% trans "Name Z-A" %}</a></li>
+</ul>

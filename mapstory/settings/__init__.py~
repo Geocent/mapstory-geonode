@@ -1,0 +1,172 @@
+# -*- coding: utf-8 -*-
+#########################################################################
+#
+# Copyright (C) 2012 OpenPlans
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+#########################################################################
+
+# Django settings for the GeoNode project.
+import os
+from geonode.settings import *
+#
+# General Django development settings
+#
+
+SITENAME = 'MapStory'
+
+# Defines the directory that contains the settings file as the LOCAL_ROOT
+# It is used for relative settings elsewhere.
+LOCAL_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+WSGI_APPLICATION = "mapstory.wsgi.application"
+
+STATICFILES_DIRS = [
+    os.path.join(LOCAL_ROOT, "static"),
+    ("maploom/vendor", LOCAL_ROOT + "/../../MapLoom/vendor"),
+    ("maploom", LOCAL_ROOT + "/../../MapLoom/build"),
+] + STATICFILES_DIRS
+
+STATIC_ROOT = os.path.join(LOCAL_ROOT, "static_root")
+MEDIA_ROOT = os.path.join(LOCAL_ROOT, "uploaded")
+
+# Note that Django automatically includes the "templates" dir in all the
+# INSTALLED_APPS, se there is no need to add maps/templates or admin/templates
+TEMPLATE_DIRS = (
+    os.path.join(LOCAL_ROOT, "templates"),
+) + TEMPLATE_DIRS
+
+# Location of url mappings
+ROOT_URLCONF = 'mapstory.urls'
+
+# Location of locale files
+LOCALE_PATHS = (
+    os.path.join(LOCAL_ROOT, 'locale'),
+    ) + LOCALE_PATHS
+
+# Defines settings for development
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(LOCAL_ROOT, 'development.db'),
+    },
+}
+
+INSTALLED_APPS += (
+    'mapstory',
+    'django.contrib.webdesign',
+    'geonode.contrib.geogit'
+)
+
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'mapstory.context_processors.context',
+)
+
+OGC_SERVER = {
+    'default' : {
+        'BACKEND' : 'geonode.geoserver',
+        'LOCATION' : 'http://localhost:8080/geoserver/',
+        # PUBLIC_LOCATION needs to be kept like this because in dev mode
+        # the proxy won't work and the integration tests will fail
+        # the entire block has to be overridden in the local_settings
+        'PUBLIC_LOCATION' : 'http://localhost:8000/geoserver/',
+        'USER' : 'admin',
+        'PASSWORD' : 'geoserver',
+        'MAPFISH_PRINT_ENABLED' : True,
+        'PRINT_NG_ENABLED' : True,
+        'GEONODE_SECURITY_ENABLED' : True,
+        'GEOGIT_ENABLED' : True,
+        'WMST_ENABLED' : False,
+        'BACKEND_WRITE_ENABLED': True,
+        'WPS_ENABLED' : True,
+        # Set to name of database in DATABASES dictionary to enable
+        'DATASTORE': '', #'datastore',
+        'TIMEOUT': 10  # number of seconds to allow for HTTP requests
+    }
+}
+
+DEBUG_STATIC = True
+
+REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
+
+DATABASE_PASSWORD = None
+
+LOCAL_CONTENT = True
+
+GEOGIT_DATASTORE_NAME = 'geogit'
+
+if os.path.exists('mapstory/settings/local_settings.py'):
+    exec open('mapstory/settings/local_settings.py') in globals()
+
+#@todo remove this hack once maploom can deal with other config
+# have to put this after local_settings or any adjustments to OGC_SERVER will
+# not get picked up
+MAP_BASELAYERS = [
+    {
+        "source": {
+            "ptype": "gxp_wmscsource",
+            "url": OGC_SERVER['default']['PUBLIC_LOCATION'] + "wms",
+            "restUrl": "/gs/rest",
+            "name": "local geoserver"
+        }
+    },
+    {
+        "source": {"ptype": "gxp_osmsource", "name": "OpenStreetMap"},
+        "type": "OpenLayers.Layer.OSM",
+        "name": "mapnik",
+        "title": "OpenStreetMap",
+        "args": ["OpenStreetMap"],
+        "visibility": True,
+        "fixed": True,
+        "group":"background"
+    }
+]
+
+if LOCAL_CONTENT:
+    REMOTE_CONTENT_URL = STATIC_URL + 'assets'
+
+if DATABASE_PASSWORD:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'mapstory',
+            'USER': 'mapstory',
+            'PASSWORD': DATABASE_PASSWORD,
+            'HOST' : 'localhost',
+            'PORT' : '5432',
+        },
+        'datastore' : {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': 'mapstory_data',
+            'USER' : 'mapstory',
+            'PASSWORD' : DATABASE_PASSWORD,
+            'HOST' : 'localhost',
+            'PORT' : '5432',
+        }
+    }
+
+    OGC_SERVER['default']['DATASTORE'] = 'datastore'
+
+    UPLOADER = {
+        'BACKEND': 'geonode.importer',
+        'OPTIONS': {
+            'TIME_ENABLED': True,
+            'GEOGIT_ENABLED': True,
+        }
+    }
+
+    USE_BIG_DATE = True
+
+    GEOGIT_DATASTORE_NAME = 'geogit'
