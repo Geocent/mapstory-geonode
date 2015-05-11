@@ -1,4 +1,5 @@
 {% verbatim %}
+{{ results }}
 <li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4">
     <div>
         <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}"/></a>

@@ -19,7 +19,6 @@
                             {% verbatim %}
                             <li ng-repeat="category in categories">
                                 <a ng-init="toggle=true" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle; active=category.id" ng-class="{active: (!toggle && (active == category.id))}">{{ category.gn_description}}
-                                    <!-- This somehow stopped working? -->
                                     <span class="badge pull-right">{{ category.count}}</span>
                                 </a>
                             </li>

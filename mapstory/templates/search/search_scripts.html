@@ -28,9 +28,6 @@
   AUTOCOMPLETE_URL_REGION = '{% url "autocomplete_light_autocomplete" "RegionAutocomplete" %}';
   AUTOCOMPLETE_URL_KEYWORD = '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}';
 
-  var content_view = true;
-  var users_view = false;
-
   var module = angular.module('search', ['geonode_main_search']);
   module.constant('Configs', {
     url: SEARCH_URL

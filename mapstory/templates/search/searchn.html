@@ -70,6 +70,11 @@
     {% else %}
     SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
     {% endif %}
+    $(function() {
+       $('#text_search_input').attr('placeholder','Search for MapStories or StoryLayers ...');
+       $('#keyword_search_input').attr('placeholder','Search for keyword ...');
+       $('#region_search_input').attr('placeholder','Search for country or continent ...');
+    });
   </script>
   {% with include_spatial='true' %}
   {% include 'search/search_scripts.html' %}

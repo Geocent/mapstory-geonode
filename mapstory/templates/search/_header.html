@@ -1,8 +1,8 @@
 <div class="row" style="border-bottom:1px solid darkgray">
 	<div class="row" style="margin:20px 0 30px">
 		<div class="input-group col-sm-6 col-sm-offset-3">
-			<span class="input-group-addon" style="font-size:1.3em;background-color:white;border:1px solid gainsboro" ng-click="view = 'content'"><a> <i class="fa fa-cubes"></i> Search for Content </a></span>
-			<span class="input-group-addon" style="font-size:1.3em;background-color:white;border:1px solid gainsboro" ng-click="view = 'users'"><a> <i class="fa fa-users"></i> Search for Storytellers </a></span>
+			<span class="input-group-addon" style="font-size:1.3em;background-color:white;border:1px solid gainsboro" ng-click="view='content'; query={}; SEARCH_URL='{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'"><a> <i class="fa fa-cubes"></i> Search for Content </a></span>
+			<span class="input-group-addon" style="font-size:1.3em;background-color:white;border:1px solid gainsboro" ng-click="view='users'; query={}; SEARCH_URL='{% url 'api_dispatch_list' api_name='api' resource_name='profiles' %}'"><a> <i class="fa fa-users"></i> Search for Storytellers </a></span>
 		</div>
 	</div>
 </div>
