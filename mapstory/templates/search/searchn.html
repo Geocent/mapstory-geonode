@@ -13,7 +13,7 @@
 
 {% block body_outer %}
     {% include 'search/_header.html' %}
-    <div ng-init="view='content'" ng-show="view == 'content'">
+    <div ng-init="ngview='content'" ng-show="ngview == 'content'">
         <div class="col-lg-3">
             {% include 'search/_whats_hot_content.html' %}
             {% include 'search/_refine_content.html' %}
@@ -37,7 +37,7 @@
             {% include 'search/_pagination.html' %}
         </div>
     </div>
-    <div ng-show="view == 'users'">
+    <div ng-show="ngview == 'users'">
         <div class="col-lg-3">
             {% include 'search/_whats_hot_users.html' %}
             {% include 'search/_refine_users.html' %}
