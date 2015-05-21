@@ -1,324 +1,491 @@
-{% extends "people/profile_base.html" %}
+{% extends "site_base.html" %}
 {% load static %}
 {% load friendly_loader %}
 {% friendly_load i18n avatar_tags relationship_tags activity_tags %}
 {% load pagination_tags %}
-
+{% load activity_tags  social_tags i18n %}
 {% block title %} {% trans "Profile of " %}{{ profile.first_name|default_if_none:profile.username }}{% endblock %}
 
 {% block body_class %}people explore{% endblock %}
 
 {% block extra_head %}
-<link href="{{ STATIC_URL }}mapstory/css/profile.css" rel="stylesheet" />
+
+
+
+
 {% endblock %}
 
-{% block body %}
-<article id="profile-banner">
-    <div class="row">
-        <div class="col-sm-2">
-            {% avatar profile 140 %}
+{% block middle %}
+		<div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-position: 50% 25px;">
+						<div class="maskParent">
+							<div class="paralaxMask"></div>
+							<div class="paralaxText container" style="text-align:left;padding-bottom:0">
+								<div class="row">
+									<div class="col-sm-1">
+
+										<img class="img-circle" src="{% avatar_url user 75 %}" width="75" height="75" style="margin-top:55px;margin-bottom:0px"/>
+
+									</div>
+									<div class="col-sm-6">
+										<div style="padding:60px 0px 0px 10px;">
+											<h1 style="font-size:3em">{{ profile.name_long }}</h1>
+											<h1 style="font-size:1.1em;">
+												{{ profile.organization }}, {{ profile.location }}</h1>
+										</div>
+									</div>
+									<div class="col-sm-5">
+										<div class="row"  style="padding:80px 0px 10px 10px;">
+										<div class="col-sm-4">
+										<a class="btn btn-sm btn-block" href="{% url "profile_edit" user.username %}" style="font-size:0.9em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
+											edit my profile
+										</a>
+										</div>
+										<div class="col-sm-4">
+										<a class="btn btn-sm btn-block" href="{% url "new_map" %}" style="font-size:0.9em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
+											create a mapstory
+										</a>
+										</div>
+										<div class="col-sm-4">
+										<a class="btn btn-sm btn-block" href="{% url "layer_upload" %}" style="font-size:0.9em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
+											upload storylayer
+										</a>
+										</div>
+								</div>
+									</div>
+							</div>
+						</div>
+					</div>
+
+<section class="slice" id="dashboard" style="padding-top:20px">
+<div class="container">
+<div class="row" >
+<div class="col-lg-2" style="padding-top:10px">
+
+
+
+    <!-- notifications -->
+    {# if user == profile #}
+
+
+    <h3>
+        <span style="color:orange">notifications</span>
+    </h3>
+    <hr style="margin:5px">
+    <h3>
+        <span> sample notification 1</span>
+    </h3>
+    <hr style="margin:5px">
+    <h3>
+        <span> sample notification 1</span>
+    </h3>
+
+    {# endif #}
+
+
+
+
+    <!-- user actions -->
+    {# if user == profile #}
+    <hr style="margin:5px">
+    <h3 style="margin-top:30px">
+        <span style="color:orange">your recent activities</span>
+    </h3>
+
+    <hr style="margin:5px">
+    <h3>
+        <span><i class="icon-cloud-upload"></i>  sample activity 1</span>
+    </h3>
+    <hr style="margin:5px">
+    <h3>
+        <span><i class="icon-cloud-upload"></i>  sample activity 2</span>
+    </h3>
+
+    {# endif #}
+
+    <hr style="margin:5px">
+</div>
+<div class="col-lg-10" style="border-left:1px solid gainsboro">
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#feed" data-toggle="tab"><strong>{{ activity_stream|length }}</strong> <br/> New Updates</a></li>
+    <li><a href="#mapstories" data-toggle="tab"><strong>{{ maps|length }}</strong><br/>MapStories</a></li>
+    <li><a href="#storylayers" data-toggle="tab"> <strong>{{ layers|length }}</strong><br/>StoryLayers</a></li>
+    <li><a href="#blogs" data-toggle="tab"><strong>{{ request.user.diary_entries.all|length }}</strong><br/>Diary Entries</a></li>
+    <li><a href="#messages" data-toggle="tab"><strong>{{ threads|length }}</strong><br/>Messages</a></li>
+    <li><a href="#favorites" data-toggle="tab"><strong>0</strong><br/>Favorites</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane" id="mapstories">
+    <div class="container">
+        <div class="row" style="text-align:center">
+            <div class="col-sm-3 col-sm-offset-6" style="border-right:1px solid gainsboro">
+                <h2><a href="{% url "new_map" %}">create a new mapstory</a></h2>
+            </div>
+            <div class="col-sm-3">
+                <!--h2>mark all as read</h2-->
+            </div>
         </div>
-        <div class="col-sm-8">
-            <div class="profile-title">{{ profile.name_long }}</div>
-            <div class="profile-subtitle">
-                {% if profile.position %}
-                <span>{{ profile.position }}, </span>
-                {% endif %}
-                {% if profile.organization %}
-                <span>{{ profile.organization }}</span>
-                {% endif %}
-            </div>
-            <div class="profile-subtitle">
-                {% if profile.location %}
-                <span>{{ profile.location }}</span>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</article>
-
-<article>
-    <div class="row">
-        <div class="col-sm-2">
-
-            <!-- notifications -->
-            <div class="sidebar-header"><h3>user actions</h3></div>
-            {% if user == profile %}
-            <div class="sidebar-content">
-                <a href="{% url "profile_edit" user.username %}">{% trans "edit profile" %}</a>
-            </div>
-            <div class="sidebar-content">
-                <a href="{% url "account_password" %}">{% trans "change password" %}</a>
-            </div>
-            <div class="sidebar-content">
-                <a href="{% url "layer_upload" %}">{% trans "upload new layers" %}</a>
-            </div>
-            <div class="sidebar-content">
-                <a href="{% url "new_map" %}">{% trans "create a new map" %}</a>
-            </div>
-            {% if_has_tag actor_url %}
-            <div class="sidebar-content">
-                <a href="{% actor_url profile %}">{% trans "my activities" %}</a>
-            </div>
-            {% endif_has_tag %}
-            {% if_has_tag if_relationship %}
-            <div class="sidebar-content">
-                {% include "relationships/_manage_connections.html" %}
-            </div>
-            {% endif_has_tag %}
-            {% else %}<a href="{% actor_url profile %}">{% trans "user activities" %}</a>
-            {% if_has_tag if_relationship %}
-            {% include "relationships/_profile_follow.html" %}
-            {% endif_has_tag %}
-            {% endif %}
-            {% if_has_tag if_relationship %}
-            {% include "relationships/_list_connections.html" %}
-            {% endif_has_tag %}
-
-            <!-- notifications -->
-            {% if user == profile %}
-            <div class="sidebar-header"><h3>notifications</h3></div>
-            <div class="sidebar-content">
-                sample notification 1
-            </div>
-            <div class="sidebar-content">
-                sample notification 2
-            </div>
-            {% endif %}
-
-            <!-- user actions -->
-            {% if user == profile %}
-            <div class="sidebar-header"><h3>recent activities</h3></div>
-            <div class="sidebar-content">
-                sample activity 1
-            </div>
-            <div class="sidebar-content">
-                sample activity 2
-            </div>
-            {% endif %}
-
-
-            <!-- contact profile -->
-            <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
-            {% if profile.email %}
-            <div class="sidebar-content">
-                <a href="mailto:{{ profile.email }}"><i class="fa fa-envelope-o"></i>email {{ profile.first_name|default_if_none:profile.username }}</a>
-            </div>
-            {% endif %}
-            {% if profile.email %}
-            <div class="sidebar-content">
-                <a href="mailto:{{ profile.email }}"><i class="fa fa-facebook"></i>facebook</a>
-            </div>
-            {% endif %}
-            {% if profile.email %}
-            <div class="sidebar-content">
-                <a href="mailto:{{ profile.email }}"><i class="fa fa-twitter"></i>twitter</a>
-            </div>
-            {% endif %}
-
-            <!-- tags and interests -->
-            {% if profile.keyword_list %}
-            <div class="sidebar-header"><h3>tags & interests </h3></div>
-            {% for keyword in profile.keyword_list %}
-            <div class="label label-tags">{{ keyword }}</div>
-            {% endfor %}
-            {% endif %}
-
-            <!-- what is this part?
-            {% if object.email %}
-                <dt><i class="fa fa-envelope-o"></i></dt>
-                <dd>
-                    <a href="mailto:{{ object.email }}">{{ object.email }}</a>
-                </dd>
-            {% endif %}
-
-            -->
-        </div>
-
-        <div class="col-sm-10" style="border-left: 1px solid gainsboro">
-            <div class="tabbable-panel">
-                <div class="tabbable-line">
-                    <ul class="nav nav-tabs ">
-                        <li class="active">
-                            <a href="#mapstories_list" data-toggle="tab">
-                                <div class="counter">70</div>
-                                MapStories </a>
-                        </li>
-                        <li>
-                            <a href="#storylayers_list" data-toggle="tab">
-                                <div class="counter">70</div>
-                                StoryLayers </a>
-                        </li>
-                        {% if user == profile %}
-                        <li>
-                            <a href="#messages_list" data-toggle="tab">
-                                <div class="counter">70</div>
-                                Messages </a>
-                        </li>
-                        {% endif %}
-                        <li>
-                            <a href="#user_activities" data-toggle="tab">
-                                <div class="counter">70</div>
-                                User Activities </a>
-                        </li>
-                        {% if user == profile %}
-                        <li>
-                            <a href="#newsfeed" data-toggle="tab">
-                                <div class="counter">70</div>
-                                News Feed </a>
-                        </li>
-                        {% endif %}
-                        <li>
-                            <a href="#diary_entries" data-toggle="tab">
-                                <div class="counter">70</div>
-                                Diary Entries </a>
-                        </li>
-                        <li>
-                            <a href="#geobadges_list" data-toggle="tab">
-                                <div class="counter">70</div>
-                                Geobadges </a>
-                        </li>
-                        <li>
-                            <a href="#favorites_list" data-toggle="tab">
-                                <div class="counter">70</div>
-                                Favorites </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="mapstories_list">
-                            <!--Geonode Contents
-                            <div class="col-md-12">
-                                {% include "people/_profile_filters.html" %}
-                            </div> 
-                            <div class="col-md-12">
-                                {% include "search/_sort_filters.html" %}
-                            </div> 
-                            <div class="col-md-12">
-                                {% include 'search/_pagination.html' %}
-                            </div> 
-                            <div class="col-md-12">
-                                {% include 'base/_resourcebase_snippet.html' %}
-                            </div>
-                            -->
-                            <div class="no-content">
-                                <h2>No MapStories.</h2>
-                                <h4>Share your first MapStory now.</h4>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="storylayers_list">
-                            <div class="no-content">
-                                <h2>No StoryLayers.</h2>
-                                <h4>Upload your first StoryLayer now.</h4>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="messages_list">
-                            <div class="no-content">
-                                <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
-                                <h4>Compose a new message now.</h4>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="user_activities">
-                            <div class="no-content">
-                                <h2>No activities.</h2>
-                                <h4>Explore MapStory now.</h4>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="newsfeed">
-                            <div class="no-content">
-                                <h2>No updates.</h2>
-                                <h4>Explore MapStory now.</h4>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="diary_entries">
-                            <div class="no-content">
-                                <h2>No entries.</h2>
-                                <h4>Write your first diary entry now.</h4>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="geobadges_list">
-                            <div class="no-content">
-                                <h2>No GeoBadges.</h2>
-                                <h4>Write your first diary entry now.</h4>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="favorites_list">
-                            <div class="no-content">
-                                <h2>No favorites.</h2>
-                                <h4>Explore MapStory now.</h4>
+        <hr style="margin-top:10px;margin-bottom:10px">
+        <div class="row">
+            <div class="panel-group" id="accordion">
+                {% for resource in maps %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ resource.pk }}" style="font-size:1.1em">
+                                <span style="float:left">{{ resource.title }}</span>
+                                <span style="float:right">{{ resource.date }}</span>
+                            </a>
+                            <div style="clear:both"></div>
+                        </h3>
+                    </div>
+                    <div id="collapse{{ resource.pk }}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <img class="img-responsive" src="{{ resource.thumbnail_url }}" />
+                                </div>
+                                <div class="col-sm-7">
+                                    <h6>
+                                        Category: {{ resource.category }}
+                                    </h6>
+                                    <hr style="margin:10px">
+                                    <h6>
+                                        {{ resource.abstract }}
+                                    </h6>
+                                    <hr style="margin:10px">
+                                    <h6>Tags: {{ resource.keyword_csv }}</h6>
+                                    <h6>Last edited: {{ resource.date }}</h6>
+                                </div>
+                                <div class="col-sm-1" style="border-left:1px solid gainsboro;text-align:right">
+                                    <h2>play</h2>
+                                    <hr style="margin:2px">
+                                    <h2>share</h2>
+                                    <hr style="margin:2px">
+                                    <h2>edit</h2>
+                                    <hr style="margin:2px">
+                                    <h2>delete</h2>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-</article>
-
-
-
-
-<!--  WHAT IS THIS PART?!?
-
-{% if user.is_authenticated %}
-<div class="col-md-8">
-  <h3>Groups</h3>
-  {% if user == profile %}
-    {% for group in profile.group_list_all %}
-      <article>
-        <div class="row">
-           <div ng-if="group.logo != ''" class="col-md-2">
-             <a href="{{ group.get_absolute_url }}" ><img src="/uploaded/{{ group.logo }}" alt="{{ group.title }}" class="group-logo" /></a>
-           </div>
-           <div class="col-md-10">
-             <h5>
-               <i class="fa fa-group"></i> <a href="{{ group.get_absolute_url }}">{{ group.title }}</a>
-               {% if group.email %} <a href="mailto:{{ group.email }}"><i class="fa fa-envelope-o"></i></a>{% endif %}
-             </h5>
-             <p>{{ group.description}}</p>
-           </div>
-         </div>
-     </article>
-    {% endfor %}
-  {% else %}
-    {% for group in profile.group_list_public %}
-      <article>
-        <div class="row">
-           <div ng-if="group.logo != ''" class="col-md-2">
-             <a href="{{ group.get_absolute_url }}" ><img src="/uploaded/{{ group.logo }}" alt="{{ group.title }}" class="group-logo" /></a>
-           </div>
-           <div class="col-md-10">
-             <h5>
-               <i class="fa fa-group"></i> <a href="{{ group.get_absolute_url }}">{{ group.title }}</a>
-               {% if group.email %} <a href="mailto:{{ group.email }}"><i class="fa fa-envelope-o"></i></a>{% endif %}
-             </h5>
-             <p>{{ group.description}}</p>
-           </div>
-         </div>
-     </article>
-    {% endfor %}
-  {% endif %} 
 </div>
-{% endif %}
+<div class="tab-pane" id="storylayers">
+    <div class="container">
+        <div class="row">
+            <div class="panel-group" id="accordion2">
+                {% for resource in layers %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion2" href="#collapseA{{ resource.pk }}" style="font-size:1.1em">
+                                <span style="float:left">{{ resource.title }}</span>
+                                <span style="float:right">{{ resource.date }}</span>
+                            </a>
+                            <div style="clear:both"></div>
+                        </h3>
+                    </div>
+                    <div id="collapseA{{ resource.pk }}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <img class="img-responsive" src="{{ resource.thumbnail_url}}" />
+                                </div>
+                                <div class="col-sm-7">
+                                    <h6>
+                                        Category: {{ resource.category }}
+                                    </h6>
+                                    <hr style="margin:10px">
+                                    <h6>
+                                        {{ resource.abstract }}
 
-WHAT IS THIS PART?!-->
+                                    </h6>
+                                    <hr style="margin:10px">
+                                    <h6>Tags: {{ resource.keyword_csv }}</h6>
+                                    <h6>Last edited: {{ resource.date }}</h6>
+                                </div>
+                                <div class="col-sm-1" style="border-left:1px solid gainsboro;text-align:right">
+                                    <h5>play</h5>
+                                    <hr style="margin:0px">
+                                    <h5>share</h5>
+                                    <hr style="margin:0px">
+                                    <h5>edit</h5>
+                                    <hr style="margin:0px">
+                                    <h5>delete</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-pane" id="blogs">
+    <div class="container">
 
 
+        {% for entry in request.user.diary_entries.all %}
+
+        <div class="row" style="margin-top:10px;border-bottom:1px solid gainsboro">
+            <div class="col-sm-12">
+                <h2><a href="{% url 'diary-detail' entry.id %}">{{ entry.title }}</a><p><small>{{ entry.date }}</small></p></h2>
+                <h4>
+                    {{ entry.content }}
+                </h4>
+            </div>
+        </div>
+
+        {% empty %}
+
+        <div class="no-content">
+            <h2>No entries.</h2>
+            <h4>Write your first diary entry now.</h4>
+        </div>
+
+        {% endfor %}
+
+    </div>
+</div>
+<div class="tab-pane" id="favorites">
+
+</div>
+<div class="tab-pane active" id="feed">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8" style="border-right:1px solid gainsboro">
+                <h2>
+                    <span style="float:left">News and Updates</span>
+													<span style="float:right">
+														<div class="btn-group">
+                                                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                                                All updates
+                                                            </a>
+                                                            <ul class="dropdown-menu" role="menu">
+                                                                <li><a href="#">All updates</a></li>
+                                                                <li><a href="#">My channels</a></li>
+                                                                <li><a href="#">My friends</a></li>
+                                                                <li><a href="#">My interests</a></li>
+                                                                <li><a href="#">My involvements</a></li>
+                                                            </ul>
+                                                        </div>
+													</span>
+                    <div style="clear:both"></div>
+                </h2>
+                <hr style="margin:5px">
+                <div style="max-height:600px;overflow-y:scroll;overflow-x:hidden">
+
+                    {% for action in activity_stream %}
+
+                    {% activity_item action %}
+
+                    {% endfor %}
+
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <button class="btn btn-md btn-block">
+                    Invite your friends to MapStory
+                </button>
+                <br>
+                <h2>Recommendations</h2>
+                <hr style="margin:5px">
+                <div class="container">
+                    <div class="row">
+                        {% if profile.keyword_list %}
+                        {% for keyword in profile.keyword_list %}
+                        <div class="col-sm-12" style="background-color:#f6f6f6">
+                            <div class="row" style="margin-top:5px">
+                                <div class="col-sm-3" style="text-align:center;padding:5px 0 5px 10px">
+                                    <img src="images/orgs/org7.png" width="50" height="50" class="img-circle" align="middle"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h2 style="padding-top:5px">Arrow Institute</h2>
+                                    <h5><a>follow</a> | <a>message</a> | <a>remove</a></h5>
+                                </div>
+                            </div>
+                            <hr style="margin:5px">
+                        </div>
+                        {% endfor %}
+                        {% endif%}
+
+                    </div>
+                </div>
+
+                <!--h2 style="padding-top:20px">
+                    <span style="float:left">Near Me</span>
+                    <span style="float:right"><small>Washington, DC</small></span>
+                    <div style="clear:both"></div>
+                </h2>
+                <hr style="margin:5px">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12" style="background-color:#f6f6f6">
+                            <div class="row" style="margin-top:5px">
+                                <div class="col-sm-3" style="text-align:center;padding:5px 0 5px 10px">
+                                    <img src="images/orgs/org7.png" width="50" height="50" class="img-circle" align="middle"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h2 style="padding-top:5px">Arrow Institute</h2>
+                                    <h5><a>follow</a> | <a>message</a> | <a>remove</a></h5>
+                                </div>
+                            </div>
+                        <hr style="margin:5px">
+                        </div>
+                        <div class="col-sm-12" style="background-color:#f6f6f6">
+                            <div class="row" style="margin-top:5px">
+                                <div class="col-sm-3" style="text-align:center;padding:5px 0 5px 10px">
+                                    <img src="images/orgs/org6.png" width="50" height="50" class="img-circle" align="middle"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h2 style="padding-top:5px">Talk Foundation</h2>
+                                    <h5><a>follow</a> | <a>message</a> | <a>remove</a></h5>
+                                </div>
+                            </div>
+                        <hr style="margin:5px">
+                        </div>
+                        <div class="col-sm-12" style="background-color:#f6f6f6">
+                            <div class="row" style="margin-top:5px">
+                                <div class="col-sm-3" style="text-align:center;padding:5px 0 5px 10px">
+                                    <img src="images/avatars/ava7.png" width="50" height="50" class="img-circle" align="middle"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h2 style="padding-top:5px">Nymphadora Tonks</h2>
+                                    <h5><a>follow</a> | <a>message</a> | <a>remove</a></h5>
+                                </div>
+                            </div>
+                        <hr style="margin:5px">
+                        </div>
+                        <div class="col-sm-12" style="background-color:#f6f6f6">
+                            <div class="row" style="margin-top:5px">
+                                <div class="col-sm-3" style="text-align:center;padding:5px 0 5px 10px">
+                                    <img src="images/avatars/ava4.png" width="50" height="50" class="img-circle" align="middle"/>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h2 style="padding-top:5px">Kingsley Shacklebolt</h2>
+                                    <h5><a>follow</a> | <a>message</a> | <a>remove</a></h5>
+                                </div>
+                            </div>
+                        <hr style="margin:5px">
+                        </div>
+                    </div>
+                </div-->
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="tab-pane" id="messages">
+    <div class="container">
+        <div class="row" style="text-align:center">
+            <div class="col-sm-3 col-sm-offset-6" style="border-right:1px solid gainsboro">
+                <h2><a href="{% url 'message_create' %}">compose a message</a></h2>
+            </div>
+            <div class="col-sm-3">
+                <h2>mark all as read</h2>
+            </div>
+        </div>
+        <hr style="margin-top:10px;margin-bottom:30px">
+        <div class="row">
+            <div class="panel-group" id="msgacc">
+
+                {% for thread in threads %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#msgacc" href="#msg{{ thread.pk }}" style="font-size:1.1em">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        {% for user in thread.users.all %}
+                                        {% ifnotequal request.user user %}
+                                        <img src="{% avatar_url user 30 %}" class="img-circle" width="30" height="30" />
+
+                                        <a href="{{ user.get_absolute_url }}">{{ user }}</a>
+                                        {% endifnotequal %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        {{ thread.subject }}
+                                    </div>
+                                    <div class="col-sm-2">
+                                        yesterday
+                                    </div>
+                                </div>
+                            </a>
+                        </h2>
+                    </div>
+                    <div id="msg{{ thread.pk }}" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <h6>
+                                        Sent: 01/01/2014, 12:00:00 AM
+                                    </h6>
+                                    <hr style="margin:10px">
+                                    <h6>
+                                        {{ thread.latest_message.content|slice:"50" }}
+                                    </h6>
+                                    <hr style="margin:10px">
+                                    <h6>Tags: lorem, ipsum, dolor</h6>
+                                    <h6>Last edited: 01/01/2014</h6>
+                                </div>
+                                <div class="col-sm-2" style="border-left:1px solid gainsboro;text-align:right">
+                                    <h3>reply</h3>
+                                    <hr style="margin:2px">
+                                    <h3>flag</h3>
+                                    <hr style="margin:2px">
+                                    <h3>forward</h3>
+                                    <hr style="margin:2px">
+                                    <h3>delete</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+
+                <div class="no-content">
+                    <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
+                    <h4>Compose a new message now.</h4>
+                </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 
 
 {% include "_bulk_permissions_form.html" %}
 {% endblock %}
 
 {% block extra_script %}
-  {% if GEONODE_SECURITY_ENABLED %}
-    {% include "_permissions_form_js.html" %}
-  {% endif %}
-  <script type="text/javascript">
-      {% if HAYSTACK_SEARCH %}
-          SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}?owner__username={{profile.username}}'
-      {% else %}
-          SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}?owner__username={{profile.username}}';
-      {% endif %}
-  </script>
+
+
+
+
+
+{% if GEONODE_SECURITY_ENABLED %}
+{% include "_permissions_form_js.html" %}
+{% endif %}
+<script type="text/javascript">
+    {% if HAYSTACK_SEARCH %}
+        SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}?owner__username={{profile.username}}'
+        {% else %}
+        SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}?owner__username={{profile.username}}';
+        {% endif %}
+</script>
 {% include 'search/search_scripts.html' %}
 {% endblock %}
 
