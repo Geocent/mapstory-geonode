@@ -80,40 +80,56 @@
                 </div>
                 </div>
                 <div class="col-sm-8">
-                    <div class="row text-center" style="padding:20px">
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/stud.png' %}">
-                            <h5>Students</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/educ.png' %}">
-                            <h5>Educators</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/libr.png' %}">
-                            <h5>Librarians</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/rese.png' %}">
-                            <h5>Researchers</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/busi.png' %}">
-                            <h5>Businesspeople</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/huma.png' %}">
-                            <h5>Humanitarians</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/poli.png' %}">
-                            <h5>Policymakers</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/jour.png' %}">
-                            <h5>Journalists</h5>
-                        </div>
-                    </div>
+                    <div class="row" style="padding:20px">
+									<div class="col-sm-3" style="text-align:center;padding:5px">
+										<a href="{% url 'getpage' 'started' %}">
+											<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/students.png" width="150" height="150">
+											<h4>Students</h4>
+										</a>
+									</div>
+									<div class="col-sm-3" style="text-align:center;padding:5px">
+										<a href="{% url 'getpage' 'started' %}">
+											<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/teachers.png" width="150" height="150">
+											<h4>Educators</h4>
+										</a>
+									</div>
+									<div class="col-sm-3" style="text-align:center;padding:5px">
+										<a href="{% url 'getpage' 'started' %}">
+											<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/humanitarians.png" width="150" height="150">
+											<h4>Humanitarians</h4>
+										</a>
+									</div>
+									<div class="col-sm-3" style="text-align:center;padding:5px">
+										<a href="{% url 'getpage' 'started' %}">
+											<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/business.png" width="150" height="150">
+											<h4>Businesspeople</h4>
+										</a>
+									</div>
+									<div class="col-sm-3" style="text-align:center;padding:5px">
+										<a href="{% url 'getpage' 'started' %}">
+											<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/librarians.png" width="150" height="150">
+											<h4>Librarians</h4>
+										</a>
+									</div>
+									<div class="col-sm-3" style="text-align:center;padding:5px">
+										<a href="{% url 'getpage' 'started' %}">
+											<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/researchers.png" width="150" height="150">
+											<h4>Researchers</h4>
+										</a>
+									</div>
+									<div class="col-sm-3" style="text-align:center;padding:5px">
+										<a href="{% url 'getpage' 'started' %}">
+											<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/policy.png" width="150" height="150">
+											<h4>Policy Makers</h4>
+										</a>
+									</div>
+									<div class="col-sm-3" style="text-align:center;padding:5px">
+										<a href="{% url 'getpage' 'started' %}">
+											<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/journalist.png" width="150" height="150">
+											<h4>Journalists</h4>
+										</a>
+									</div>
+								</div>
                 </div>
             </div>
         </div>
@@ -173,35 +189,35 @@
                 <div class="col-sm-8">
                     <div class="row" style="padding:20px">
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
+                            <img class="rdphoto" src="{{ STATIC_URL }}mapstory/images/avatars/ava1.png">
                             <h5 class="text-center">Mafalda Hopkirk</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
+                            <img class="rdphoto" src="{{ STATIC_URL }}mapstory/images/avatars/ava2.png">
                             <h5 class="text-center">Lee Jordan</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
+                            <img class="rdphoto" src="{{ STATIC_URL }}mapstory/images/avatars/ava1.png">
                             <h5 class="text-center">Millicent Bullstrode</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
+                            <img class="rdphoto" src="{{ STATIC_URL }}mapstory/images/avatars/ava2.png">
                             <h5 class="text-center">Penelope Clearwater</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
+                            <img class="rdphoto" src="{{ STATIC_URL }}mapstory/images/avatars/ava1.png">
                             <h5 class="text-center">Nymphadora Tonks</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
+                            <img class="rdphoto" src="{{ STATIC_URL }}mapstory/images/avatars/ava1.png">
                             <h5 class="text-center">Remus Lupin</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
+                            <img class="rdphoto" src="{{ STATIC_URL }}mapstory/images/avatars/ava2.png">
                             <h5 class="text-center">Seamus Finnigan</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
+                            <img class="rdphoto" src="{{ STATIC_URL }}mapstory/images/avatars/ava1.png">
                             <h5 class="text-center">Xenophilius Lovegood</h5>
                         </div>
                     </div>
