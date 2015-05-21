@@ -18,6 +18,11 @@ from mapstory.models import DiaryEntry
 from mapstory.models import Leader
 
 from geonode.base.models import Region
+from geonode.layers.models import Layer
+from geonode.maps.models import Map
+from user_messages.models import Thread
+from actstream.models import Action
+
 
 import datetime
 
@@ -113,6 +118,15 @@ class ProfileDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ProfileDetail, self).get_context_data(**kwargs)
+
+        user = self.request.user
+
+        ctx['threads'] = Thread.ordered(Thread.objects.inbox(user))
+        ctx['threads_unread'] = Thread.ordered(Thread.objects.unread(user))
+        ctx['activity_stream'] = Action.objects.filter(public=True)[:15]
+        ctx['layers'] = Layer.objects.filter(owner=user)
+        ctx['maps'] = Map.objects.filter(owner=user)
+
         return ctx
 
 
