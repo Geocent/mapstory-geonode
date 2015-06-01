@@ -11,6 +11,7 @@
   sudo: yes
   sudo_user: root
   notify: check django running
+  ignore_errors: True
 
 - name: restart geoserver
   supervisorctl: name=geoserver state=restarted

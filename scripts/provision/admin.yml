@@ -143,12 +143,3 @@
 - name: geoserver datadir permissions
   file: path=/var/lib/geoserver/data state=directory owner=www-data group=www-data mode=775 recurse=yes
   tags: [geoserver]
-
-- name: jetty app permissions
-  file: path={{mapstory_geonode}}/scripts/misc/jetty-runner mode=650 owner=mapstory group=www-data
-  tags: [geoserver]
-
-- name: supervisor-jetty
-  template: src=files/supervisor-jetty.conf dest=/etc/supervisor/conf.d
-  notify: [reload supervisor, restart geoserver]
-  tags: [config, geoserver]
