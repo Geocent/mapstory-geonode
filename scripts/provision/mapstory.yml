@@ -24,7 +24,7 @@
   tags: [update]
 
 - name: mapstory update
-  shell: git pull && git submodule update --init --recursive chdir={{ top_project }}
+  shell: git pull && git submodule sync && git submodule update --init --recursive chdir={{ top_project }}
   tags: [update]
 
 
@@ -48,6 +48,10 @@
 - name: initial setup
   shell: . {{ venv_activate }} && paver setup chdir={{ mapstory_geonode }}
   tags: [setup]
+
+- name: configure media root
+  file: path={{ media_root }} owner=www-data group=www-data mode=0775 state=directory
+  tags: [setup, media]
 
 - name: geogig global config
   copy: src=files/geogigconfig dest=~/.geogigconfig

@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import patterns
 from django.conf.urls import url
+from django.conf.urls import include
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
@@ -31,13 +32,12 @@ urlpatterns = patterns('',
     url(r'^diary/write$', login_required(DiaryCreateView.as_view()), name='diary-create'),
     url(r'^diary/write/(?P<pk>\d+)$', login_required(DiaryUpdateView.as_view()), name='diary-update'),
     url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
-    url(r'^searchn/$', SearchView.as_view(), name='search'),
+    url(r'^search/$', SearchView.as_view(), name='search'),
     url(r'^storylayerpage$', TemplateView.as_view(template_name='mapstory/storylayerpage.html'), name='storylayerpage'),
     url(r'^mapstorypage$', TemplateView.as_view(template_name='mapstory/mapstorypage.html'), name='mapstorypage'),
     url(r'^about/leadership$', LeaderListView.as_view(template_name='mapstory/leaders.html'), name='about-leaders'),
-    url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
+    url(r'^icons/', include('icon_commons.urls')),
 ) + urlpatterns
-
 
 if settings.DEBUG:
     urlpatterns = urlpatterns + patterns('',

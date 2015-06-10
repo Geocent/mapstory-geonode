@@ -13,7 +13,7 @@
 
 {% block body_outer %}
     {% include 'search/_header.html' %}
-    <div ng-init="ngview='content'" ng-show="ngview == 'content'">
+    <div ng-show="get_url() == '/api/base/' || get_url() == '/api/featured/'">
         <div class="col-lg-3">
             {% include 'search/_whats_hot_content.html' %}
             {% include 'search/_refine_content.html' %}
@@ -21,23 +21,23 @@
         <div class="col-lg-9" style="border-left:1px solid darkgray">
             <nav class="filter">
                 <div class="input-group search-bar">
-                    <input name="text_search_input" id="text_search_input" ng-model="text_query" type="text"
-                        class="form-control">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="submit" id="text_search_btn"><i class="fa fa-search"></i> Search</button>
-                    </span>
-                </div>
-            </nav>
-            {% include 'search/_sort_filters_content.html' %}
-            <div id="search-results" class="clearfix">
-                <ul>
-                {% include 'search/_result_content.html' %}
-                </ul>
+                <input name="text_search_input" id="text_search_input" ng-model="text_query" type="text"
+                    class="form-control">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="submit" id="text_search_btn"><i class="fa fa-search"></i> Search</button>
+                </span>
             </div>
-            {% include 'search/_pagination.html' %}
+        </nav>
+        {% include 'search/_sort_filters_content.html' %}
+        <div id="search-results" class="clearfix">
+            <ul>
+            {% include 'search/_result_content.html' %}
+            </ul>
+        </div>
+        {% include 'search/_pagination.html' %}
         </div>
     </div>
-    <div ng-show="ngview == 'users'">
+    <div ng-show="get_url() == '/api/profiles/' || get_url() == '/api/groups/'">
         <div class="col-lg-3">
             {% include 'search/_whats_hot_users.html' %}
             {% include 'search/_refine_users.html' %}
@@ -45,20 +45,20 @@
         <div class="col-lg-9" style="border-left:1px solid darkgray">
             <nav class="filter">
                 <div class="input-group search-bar">
-                <input name="users_search_input" id="users_search_input" ng-model="text_query" type="text"
+                <input name="text_search_input" id="text_search_input" ng-model="text_query" type="text"
                     class="form-control">
                 <span class="input-group-btn">
-                    <button class="btn btn-primary" type="submit" id="users_search_btn"><i class="fa fa-search"></i> Search</button>
+                    <button class="btn btn-primary" type="submit" id="text_search_btn"><i class="fa fa-search"></i> Search</button>
                 </span>
             </div>
-            </nav>
-            {% include 'search/_sort_filters_users.html' %}
-            <div id="search-results" class="clearfix">
-                <ul>
-                {% include 'search/_result_users.html' %}
-                </ul>
-            </div>
-            {% include 'search/_pagination.html' %}
+        </nav>
+        {% include 'search/_sort_filters_users.html' %}
+        <div id="search-results" class="clearfix">
+            <ul>
+            {% include 'search/_result_users.html' %}
+            </ul>
+        </div>
+        {% include 'search/_pagination.html' %}
         </div>
     </div>
 {% endblock %}
@@ -71,12 +71,12 @@
     SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
     {% endif %}
     $(function() {
-       $('#text_search_input').attr('placeholder','Search for MapStories or StoryLayers ...');
-       $('#keyword_search_input').attr('placeholder','Search for keyword ...');
-       $('#region_search_input').attr('placeholder','Search for country or continent ...');
-       $('#users_search_input').attr('placeholder', 'Search for StoryTellers or Ogranizations ...')
-       $('#location_search_input').attr('placeholder', 'Search for city or country ...')
-       $('#interest_search_input').attr('placeholder', 'Search for interest ...')
+        $('#text_search_input').attr('placeholder','Search for MapStories or StoryLayers ...');
+        $('#keyword_search_input').attr('placeholder','Search for keyword ...');
+        $('#region_search_input').attr('placeholder','Search for country or continent ...');
+        $('#users_search_input').attr('placeholder', 'Search for StoryTellers or Ogranizations ...');
+        $('#location_search_input').attr('placeholder', 'Search for city or country ...');
+        $('#interest_search_input').attr('placeholder', 'Search for interest ...');
     });
   </script>
   {% with include_spatial='true' %}
